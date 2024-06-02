@@ -1,0 +1,39 @@
+<!-- article-item.component.html -->
+
+<!-- <div class="article-item" [ngClass]="{'on-sale': article.isOnSale, 'not-available': !isAvailableForSale()}">
+  <div class="image-container">
+    <img [src]="article.imageUrl" alt="{{ article.name }} Image">
+  </div>
+  <h2>{{ article.name }}</h2>
+  <p class="price" [ngClass]="{'not-available-price': !isQuantity()}">Price: {{ article.price }}</p>
+  <button *ngIf="isAvailableForSale()" (click)="incrementQuantity()">+</button>
+  <p *ngIf="isAvailableForSale()" class="quantity">{{ article.quantityInCart }}</p>
+  <button *ngIf="isAvailableForSale()" (click)="decrementQuantity()" [disabled]="article.quantityInCart === 0">-</button>
+</div> -->
+
+<!--
+  ngClass: Adds and removes CSS classes on an HTML element. 
+  In this case if 'isAvailableForSale()' evaluates to false then 'not-avilable' class will be added,
+  otherwise 'on-sale' class will be added to article-item
+-->
+
+<div class="article-item" [ngClass]="{'on-sale': article.isOnSale, 'not-available': !isAvailableForSale()}">
+  <div class="image-container">
+    <img [src]="article.imageUrl" alt="{{ article.name }} Image">
+  </div>
+  <h2>{{ article.name }}</h2>
+  <!--
+  In this case if 'isQuantity()' evaluates to false then 'not-available-price' class will be added.
+  -->
+  <p class="price" [ngClass]="{'not-available-price': !isQuantity()}">{{ article.price }} €</p>
+  <!--
+    ngIf: A structural directive that conditionally includes a template based on the value of an expression coerced to Boolean. 
+    In this case if "isAvailableForSale()" evaluates to true then buttons & article quatity will be render.
+    Decrement button will be disabled if it is equal to zero.
+  -->
+  <div *ngIf="isAvailableForSale()">
+    <button (click)="decrementQuantity()" [disabled]="article.quantityInCart === 0">-</button>
+    <p class="quantity">{{ article.quantityInCart }}</p>
+    <button (click)="incrementQuantity()">+</button>
+  </div>
+</div>

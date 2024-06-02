@@ -1,0 +1,10 @@
+.article-list-container {
+    text-align: center;
+  }
+  
+  .article-list {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    overflow-x: auto;
+  }

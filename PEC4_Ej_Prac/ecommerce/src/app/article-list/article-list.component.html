@@ -1,0 +1,42 @@
+<!-- article-list.component.html -->
+<!-- <div class="article-list-container">
+    <h1>Article List</h1>
+    <div *ngFor="let article of articles">
+      <app-article-item
+        [articleName]="article.name"
+        [articleImageUrl]="article.imageUrl"
+        [articlePrice]="article.price"
+        [articleIsOnSale]="article.isOnSale"
+        [articleQuantityInCart]="article.quantityInCart"
+      ></app-article-item>
+    </div>
+  </div>
+   -->
+
+<!-- article-list.component.html -->
+
+<!-- <div class="article-list-container">
+  <h1>Article List</h1>
+  <div *ngFor="let article of articles">
+    <app-article-item
+      [article]="article"
+      (quantityChange)="onQuantityChange($event)"
+    ></app-article-item>
+  </div>
+</div> -->
+
+<div class="article-list-container">
+    <img src='/assets/images/logo.png'>
+    <div class="article-list">
+      <app-article-item
+        *ngFor="let article of articles"
+        [article]="article"
+        (quantityChange)="onQuantityChange($event)"
+        (increment)="incrementQuantity($event)"
+        (decrement)="decrementQuantity($event)"
+      ></app-article-item>
+    </div>
+  </div>
+  
+  
+  
