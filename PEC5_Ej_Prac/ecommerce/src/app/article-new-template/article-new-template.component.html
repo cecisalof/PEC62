@@ -1,0 +1,38 @@
+<div class="article-new-template-container">
+  <h2>Nuevo Artículo (Template-Driven Form)</h2>
+  <form #articleForm="ngForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="itemName">Nombre de artículo:</label>
+      <input id="itemName" type="text" name="itemName" ngModel required>
+      <div class="alert-danger" *ngIf="articleForm.submitted && articleForm.controls['itemName'] && articleForm.controls['itemName'].invalid">
+        <div class="alert-danger" *ngIf="articleForm.controls['itemName'].errors?.['required']">El nombre del artículo es obligatorio.</div>
+      </div>
+    </div>
+
+    <div>
+      <label for="itemPrice">Precio:</label>
+      <input id="itemPrice" type="text" name="itemPrice" ngModel pattern="^\d+(\.\d{1,2})?$" required>
+      <div class="alert-danger" *ngIf="articleForm.submitted && articleForm.controls['itemPrice'] && articleForm.controls['itemPrice'].invalid">
+        <div class="alert-danger" *ngIf="articleForm.controls['itemPrice'].errors?.['required']">El precio del artículo es obligatorio.</div>
+        <div class="alert-danger" *ngIf="articleForm.controls['itemPrice'].errors?.['pattern']">Ingrese un precio válido.</div>
+      </div>
+    </div>
+
+    <div>
+      <label for="imageUrl">URL de la imagen:</label>
+      <input id="imageUrl" type="text" name="imageUrl" ngModel pattern="^(https?://(?:www\.)?[a-zA-Z0-9]+(?:\.[a-zA-Z]{2,3})+(/[a-zA-Z0-9._%+-]*)*(\.jpg|\.jpeg|\.png))$" required>
+      <div class="alert-danger" *ngIf="articleForm.submitted && articleForm.controls['imageUrl'] && articleForm.controls['imageUrl'].invalid">
+        <div class="alert-danger" *ngIf="articleForm.controls['imageUrl'].errors?.['required']">La URL de la imagen es obligatoria.</div>
+        <div class="alert-danger" *ngIf="articleForm.controls['imageUrl'].errors?.['pattern']">Ingrese una URL de imagen válida.</div>
+      </div>
+    </div>
+
+    <div>
+      <label>
+        <input type="checkbox" name="isForSale" ngModel> Está en venta
+      </label>
+    </div>
+
+    <button type="submit">Guardar</button>
+  </form>
+</div>
