@@ -1,0 +1,39 @@
+<!-- article-new-template.component.html -->
+<div class="article-new-template-container">
+    <h2>Nuevo Artículo (Reactive Form)</h2>
+    <form [formGroup]="articleForm" (ngSubmit)="onSubmit()">
+      <div>
+        <label for="name">Nombre del Artículo:</label>
+        <input type="text" id="name" formControlName="name" />
+        <div  class="alert-danger" *ngIf="articleForm.get('name')?.touched && articleForm.get('name')?.invalid">
+          <div  class="alert-danger" *ngIf="articleForm.get('name')?.hasError('required')">Nombre del artículo es requerido.</div>
+          <div class="alert-danger" *ngIf="articleForm.get('name')?.hasError('forbiddenName')">
+            No se permiten ese nombre.
+          </div>
+        </div>
+      </div>
+      <div>
+        <label for="price">Precio:</label>
+        <input type="number" id="price" formControlName="price" />
+        <div *ngIf="articleForm.get('price')?.touched && articleForm.get('price')?.invalid">
+          <div class="alert-danger" *ngIf="articleForm.get('price')?.hasError('required')">Precio es requerido.</div>
+          <div class="alert-danger" *ngIf="articleForm.get('price')?.hasError('min')">El precio no puede ser menor que 0.1€.</div>
+        </div>
+      </div>
+      <div>
+        <label for="imageUrl">URL de la Imagen:</label>
+        <input type="text" id="imageUrl" formControlName="imageUrl" />
+        <div  class="alert-danger" *ngIf="articleForm.get('imageUrl')?.touched && articleForm.get('imageUrl')?.invalid">
+          <div  class="alert-danger" *ngIf="articleForm.get('imageUrl')?.hasError('required')">URL de la imagen es requerida.</div>
+          <div  class="alert-danger" *ngIf="articleForm.get('imageUrl')?.hasError('pattern')">Por favor, ingrese una URL válida.</div>
+        </div>
+      </div>
+      <div>
+        <label for="isOnSale">En Venta:</label>
+        <input type="checkbox" id="isOnSale" formControlName="isOnSale" />
+      </div>
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+  
+    
