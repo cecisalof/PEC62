@@ -60,6 +60,11 @@
 
 
 import { Component } from '@angular/core';
+import { debounceTime, switchMap,
+  distinctUntilChanged, startWith, merge,
+  share } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { ArticleService } from '../services/article-service';
 
 interface ArticleWithId {
   id: number;
@@ -75,6 +80,7 @@ interface ArticleQuantityChange {
   quantity: number;
 }
 
+
 @Component({
   selector: 'app-article-list',
   template:
@@ -82,7 +88,7 @@ interface ArticleQuantityChange {
     <img src='/assets/images/logo.png'>
     <div class="article-list">
       <app-article-item
-      *ngFor="let article of articles"
+      *ngFor="let article of articles$ | async"
       [article]="article"
       (quantityChange)="onQuantityChange($event)"
       (increment)="incrementQuantity($event)"
@@ -94,42 +100,35 @@ interface ArticleQuantityChange {
   // templateUrl: './article-list.component.html',
   // styleUrls: ['./article-list.component.css'],
 })
+
+
+
 export class ArticleListComponent {
-  articles: ArticleWithId[] = [
-    {
-      id: 1,
-      name: 'Chai Latte',
-      imageUrl: '/assets/images/chai-latte.png',
-      price: 4.5,
-      isOnSale: true,
-      quantityInCart: 0,
-    },
-    {
-      id: 2,
-      name: 'Matcha Latte',
-      imageUrl: '/assets/images/matcha-latte.png',
-      price: 5.5,
-      isOnSale: true,
-      quantityInCart: 0,
-    },
-    {
-      id: 3,
-      name: 'Expresso',
-      imageUrl: '/assets/images/expresso.png',
-      price: 3.5,
-      isOnSale: false,
-      quantityInCart: 0,
-    },
-  ];
+  public articles$: Observable<ArticleWithId[] >;
+
+  public searchString: string = '';
+  private searchTerms: Subject<string> = new Subject();
+  private reloadArticleList : Subject <void> = new Subject();
+
+  constructor(private articleService: ArticleService) {
+    this.articles$ = this.articleService.getArticles();
+   }
+
+  ngOnInit() {
+    this.articles$ = this.searchTerms.pipe(
+      startWith(this.searchString),
+      debounceTime(500),
+      distinctUntilChanged(),
+      merge(this.reloadArticleList),
+      switchMap((q) => this.articleService.getArticles(this.searchString)));
+  }
 
   onQuantityChange(change: ArticleQuantityChange) {
-    const articleToUpdate = this.articles.find(a => a.id === change.article.id);
-
-    if (articleToUpdate) {
-      articleToUpdate.quantityInCart += change.quantity;
-    }
-
-    console.log(`Article: ${change.article.name}, Quantity: ${change.article.quantityInCart}`);
+    this.articleService.changeQuantity(change.article.id, change.quantity)
+      .subscribe((res) => {
+        console.log(res.msg);
+        this.reloadArticleList.next();
+      });
   }
 
   incrementQuantity(article: ArticleWithId) {

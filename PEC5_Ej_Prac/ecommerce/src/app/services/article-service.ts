@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
@@ -27,7 +27,11 @@ export class ArticleService {
   constructor(private http: HttpClient) { }
 
   getArticles(query?: string): Observable<ArticleWithId[]> {
-    return this.http.get<ArticleWithId[]>(`http://localhost:3000/api/articles`, { params: { q: query } });
+    let params = new HttpParams();
+    if (query) {
+      params = params.set('q', query);
+    }
+    return this.http.get<ArticleWithId[]>(`http://localhost:3000/api/articles`, { params: params, responseType: 'json' as 'json' });
   }
 
   changeQuantity(articleID: number, changeInQuantity: number): Observable<any> {
