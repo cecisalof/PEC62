@@ -59,7 +59,7 @@
 // }
 
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { debounceTime, switchMap,
   distinctUntilChanged, startWith, merge,
   share } from 'rxjs/operators';
@@ -84,7 +84,16 @@ interface ArticleQuantityChange {
 @Component({
   selector: 'app-article-list',
   template:
-    `<div class="article-list-container">
+    `
+    <div class="search">
+      <input
+        type="text" 
+        name="searchBox"
+        [(ngModel)]="searchString"
+        placeholder="Search Here"
+        (keyup)="search()">
+    </div>
+    <div class="article-list-container">
     <img src='/assets/images/logo.png'>
     <div class="article-list">
       <app-article-item
@@ -99,6 +108,8 @@ interface ArticleQuantityChange {
   styles: ['.article-list-container {text-align: center;}', '.article-list {display: flex; flex-wrap: nowrap; justify-content: space-around;}']
   // templateUrl: './article-list.component.html',
   // styleUrls: ['./article-list.component.css'],
+  ,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 
@@ -139,6 +150,10 @@ export class ArticleListComponent {
     if (article.quantityInCart > 0) {
       this.onQuantityChange({ article, quantity: -1 });
     }
+  }
+  
+  search() {
+    this.searchTerms.next(this.searchString);
   }
 }
 
