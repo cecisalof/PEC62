@@ -19,7 +19,7 @@
 
 <div class="article-item" [ngClass]="{'on-sale': article.isOnSale, 'not-available': !isAvailableForSale()}">
   <div class="image-container">
-    <img [src]="article.imageUrl" alt="{{ article.name }} Image">
+    <img [src]="article.imageUrl | imageArticle" alt="{{ article.name }} Image">
   </div>
   <h2>{{ article.name }}</h2>
   <!--
