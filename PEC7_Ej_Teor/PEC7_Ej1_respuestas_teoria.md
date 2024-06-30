@@ -1,25 +1,19 @@
 # Respuestas a la PEC7 - Ejercicio 1 - Teoría
 
-a) **¿Qué es y cómo funciona el elemento <RouterOutlet>?**
+a) **¿Qué es y cómo funciona el elemento <RouterLink> en Angular?**
 
-   - En el contexto de desarrollo web con Angular, <RouterOutlet> es un componente clave que se utiliza para cargar y mostrar componentes asociados con rutas específicas. Angular utiliza un enfoque basado en componentes para la construcción de aplicaciones de una sola página (SPA), donde diferentes componentes se cargan dinámicamente según la ruta actual.
+   - El <RouterLink> es una directiva en Angular que se utiliza para crear enlaces que permiten la navegación dentro de una aplicación Angular basada en rutas. Funciona de manera similar a los enlaces HTML tradicionales (<a>), pero en lugar de recargar la página, cambia la vista actual utilizando el enrutador de Angular.
    
-   - <router-outlet> funciona como un punto de entrada dinámico para los componentes de la aplicación, permitiendo que Angular maneje la navegación y la carga de componentes basados en las rutas definidas en la configuración del enrutador. Este enfoque facilita la construcción de aplicaciones web que pueden cambiar su contenido de manera fluida según la interacción del usuario.
+   - <RouterLink> Se declara en un template HTML de un componente de Angular. Se vincula a una ruta específica definida en la configuración de rutas de la aplicación. Al hacer clic en un elemento con la directiva routerLink, Angular intercepta el evento de clic y utiliza su enrutador interno para cambiar la vista sin recargar la página completa.
 
    - En el archivo de plantilla de tu componente principal (por lo general, app.component.html), colocas <router-outlet></router-outlet> en el lugar donde deseas que se muestren los componentes asociados con las rutas:
 
    <!-- app.component.html -->
-    ``` <header>
-    <!-- ... contenido del encabezado ... -->
-        </header>
-        <main>
-        <router-outlet></router-outlet>
-        </main>
-        <footer>
-        <!-- ... contenido del pie de página ... -->
-        </footer>```
+    ``` <a [routerLink]="['/ruta']">Enlace a la ruta</a>```
 
-b) **¿Para qué se utilizan las directivas routerLink y routerLinkActive? ¿Existen más directivas relacionadas con el router?**
+    En este ejemplo, al hacer clic en el enlace, la aplicación navegará a la ruta /ruta definida en la configuración de enrutamiento de Angular
+
+b) **Explica la diferencia entre routerLink y routerLinkActive. ¿Qué otras directivas se pueden utilizar con el router en Angular**
 
    - En Angular, las directivas routerLink y routerLinkActive se utilizan en conjunto con el enrutador para facilitar la navegación y el control de la apariencia de los elementos en función de la ruta actual. 
 
@@ -51,44 +45,102 @@ Otra directiva relacionada con el router es `'routerLinkActiveOptions`':
 
 ```<a routerLink="/home" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>```
 
-c) **¿Qué diferencias hay entre los servicios Router y ActivatedRoute? ¿Qué funcionalidades tiene cada uno de estos servicios? Describe algunos de los métodos más importantes por los que están compuestos**
+c) **Describe el servicio ActivatedRouteSnapshot. ¿Cómo se utiliza y en qué casos es útil?**
 
-`'Router'` y `'ActivatedRoute'` son dos servicios clave proporcionados por Angular que están relacionados con la navegación y el enrutamiento en una aplicación. Aquí hay una descripción de cada uno y algunas de sus funcionalidades más importantes:
+El servicio ActivatedRouteSnapshot es una representación inmutable de la información relacionada con la ruta activada en un momento específico. Contiene información sobre la ruta, como parámetros, datos, y el estado de la ruta.
 
- - `'Router'`: El servicio Router se utiliza para realizar operaciones de navegación y gestionar el estado del enrutador en una aplicación Angular. Algunas de las funcionalidades más importantes del servicio Router incluyen:
+- Uso:
+Se utiliza generalmente en las guardas de rutas (Route Guards) y en componentes para acceder a los datos estáticos y parámetros de ruta cuando se activa la ruta.
 
-* `'navigate'`: Método utilizado para navegar a una ruta específica programáticamente. Puede aceptar una variedad de argumentos, incluidos objetos de configuración y matrices de segmentos de ruta.
+- Casos de utilidad:
+Acceso a parámetros de ruta: Obtener parámetros de ruta en guardas o componentes para lógica condicional.
+Datos estáticos: Acceder a datos estáticos configurados en la definición de rutas.
+Lógica de protección: Usado en guardas como CanActivate para decidir si se permite la activación de la ruta.
 
-<!-- ``` navigateToHome() {
-  this.router.navigate(['/home']);
-} ``` -->
+ ```
+ import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from '@angular/router';
 
-* `'events'`: Propiedad que expone un Observable que emite eventos de navegación, como cambios de ruta.
+export class AuthGuard implements CanActivate {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    // lógica para verificar si se puede activar la ruta
+    return true; // o false basado en la lógica
+  }
+}
+ ```
 
-<!-- ```constructor(private router: Router) {
-  this.router.events.subscribe(event => {
-    if (event instanceof NavigationEnd) {
-      // Se ejecuta después de que la navegación se ha completado
-      console.log('Navegación completada:', event);
-    }
-  });
-}``` -->
+d)**¿Qué son las Route Guards? ¿Cómo se usan las guardas en Angular? Describe todas las guardas que existen en Angular.**
+- Route Guards:
+Las Route Guards son interfaces que permiten a Angular decidir si una ruta puede ser activada o desactivada, si se puede cargar o descargar, y si se puede dejar una ruta antes de navegar a otra. Son utilizadas para implementar lógica de seguridad y permisos en la navegación de la aplicación.
 
-* `'config'`: Propiedad que permite acceder y modificar la configuración de las rutas en tiempo de ejecución.
+- Uso:
+Las guardas se definen como servicios que implementan interfaces específicas de Angular y se configuran en las rutas para aplicar lógica antes de activar, desactivar, cargar o descargar una ruta.
 
-<!-- ```constructor(private router: Router) {
-  const routeConfig = this.router.config;
-  // Modificar la configuración de las rutas según sea necesario
-}``` -->
+Tipos de Guardas:
+CanActivate: Decide si una ruta puede ser activada.
 
- - `'ActivatedRoute'`: proporciona información sobre la ruta activa y se utiliza para acceder a los parámetros de ruta y otros datos asociados con la ruta actual. Algunas de las funcionalidades más importantes del servicio ActivatedRoute incluyen:
+```
+import { CanActivate } from '@angular/router';
 
-* `'params'`: Propiedad que expone un Observable que emite los parámetros de ruta cuando cambian.
-* `'snapshot'`: Propiedad que proporciona una instantánea de la información de la ruta en un momento específico. Útil para acceder a datos estáticos de la ruta.
-* `'parent'`: Propiedad que proporciona una referencia al ActivatedRoute de la ruta padre.
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard implements CanActivate {
+  canActivate(): boolean {
+    // lógica para permitir o denegar la activación de la ruta
+    return true; // o false
+  }
+}
+```
+CanActivateChild: Decide si una ruta hija puede ser activada.
 
-En resumen, `'Router'` y `'ActivatedRoute'` son esenciales para trabajar con la navegación y el enrutamiento en aplicaciones Angular, proporcionando un conjunto robusto de herramientas para gestionar la navegación, acceder a datos de ruta y responder a eventos relacionados con la navegación. 
+```
+import { CanActivateChild } from '@angular/router';
 
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard implements CanActivateChild {
+  canActivateChild(): boolean {
+    // lógica para permitir o denegar la activación de la ruta hija
+    return true; // o false
+  }
+}
+```
+CanDeactivate: Decide si se puede desactivar una ruta.
+
+```
+import { CanDeactivate } from '@angular/router';
+import { Observable } from 'rxjs';
+
+export interface CanComponentDeactivate {
+  canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
+  canDeactivate(component: CanComponentDeactivate): Observable<boolean> | Promise<boolean> | boolean {
+    return component.canDeactivate ? component.canDeactivate() : true;
+  }
+}
+```
+CanLoad: Decide si se puede cargar un módulo.
+
+```
+import { CanLoad } from '@angular/router';
+import { Route, UrlSegment } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard implements CanLoad {
+  canLoad(route: Route, segments: UrlSegment[]): boolean {
+    // lógica para permitir o denegar la carga del módulo
+    return true; // o false
+  }
+}
+```
 e) **¿Qué es la carga Lazy de los módulos de Angular? ¿Cómo se configura en Angular la carga Lazy?***
 
 La carga perezosa (lazy loading) en Angular es una técnica que permite cargar módulos de manera diferida, es decir, cargarlos solo cuando son necesarios. Esto ayuda a mejorar el rendimiento de la aplicación al reducir el tiempo de carga inicial, ya que no se cargan todos los módulos al inicio, sino solo aquellos que son necesarios para la ruta actual.
@@ -111,7 +163,42 @@ En este ejemplo, cuando la ruta '/lazy' se activa, Angular cargará dinámicamen
 
 En conclusión, la carga perezosa en Angular es una técnica poderosa para mejorar la eficiencia de la aplicación, especialmente en aplicaciones grandes con muchas funcionalidades. Al cargar solo los módulos necesarios, puedes reducir el tiempo de carga inicial y mejorar la experiencia del usuario. Además, Angular CLI facilita la configuración de la carga perezosa, ya que realiza gran parte del trabajo por ti.
 
-f. **¿Qué es/para qué son útiles los middlewares en el contexto de node.js? ¿Dónde estás usando middlewares en nuestra aplicación?**
+f) **Compara las diferencias entre CanDeactivate y CanActivate guards en Angular. Proporciona ejemplos de cuándo se utilizaría cada uno.**
+
+Diferencias entre CanDeactivate y CanActivate:
+- CanActivate:
+Se utiliza para determinar si una ruta puede ser activada.
+Se ejecuta antes de que se navegue a una ruta.
+Ejemplo: Verificar si el usuario está autenticado antes de permitir el acceso a una ruta protegida.
+```
+import { CanActivate } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard implements CanActivate {
+  canActivate(): boolean {
+    // lógica de autenticación
+    return true; // o false
+  }
+}
+```
+
+- CanDeactivate:
+Se utiliza para determinar si se puede desactivar una ruta.
+Se ejecuta antes de salir de una ruta actual.
+Ejemplo: Preguntar al usuario si desea guardar los cambios antes de salir de un formulario no guardado.
+
+```
+import { CanDeactivate } from '@angular/router';
+import { Observable } from 'rxjs';
+
+export interface CanComponentDeactivate {
+  canDeactivate: () => Observable
+}
+```
+
+g) **¿Qué es/para qué son útiles los middlewares en el contexto de node.js? ¿Dónde estás usando middlewares en nuestra aplicación?**
 
 En el contexto de `'Node.js'`, los middlewares son funciones que se ejecutan durante el procesamiento de una solicitud HTTP. Estas funciones tienen acceso al objeto de solicitud (req), al objeto de respuesta (res), y generalmente a la siguiente función middleware en la cadena (next). Los middlewares son una parte fundamental en la construcción de aplicaciones web y servidores en Node.js porque permiten ejecutar lógica personalizada antes o después de que se maneje una solicitud.
 
