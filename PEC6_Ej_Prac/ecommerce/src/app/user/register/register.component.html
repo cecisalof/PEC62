@@ -1,0 +1,14 @@
+<div class="article-new-template-container">
+  <h3>{{message}}</h3>
+  <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <div class="user-name">
+      <input type="text" placeholder="Username" formControlName="username">
+      <div *ngIf="registerForm.get('username')?.hasError('required')">Username is Mandatory</div>
+    </div>
+    <div class="password">
+      <input type="password" placeholder="Password" formControlName="password">
+      <div *ngIf="registerForm.get('password')?.hasError('required')">Password is Mandatory</div>
+    </div>
+    <button type="submit">Register</button>
+  </form>
+</div>
